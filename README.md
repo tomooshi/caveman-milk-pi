@@ -1,0 +1,152 @@
+# pi-caveman
+
+A [pi](https://github.com/badlogic/pi-mono) extension that injects [caveman](https://github.com/JuliusBrussee/caveman) terseness rules into pi's system prompt. Shorter chat output, without breaking the prompt cache.
+
+Cache-safe. Opt-in. Designed to stack cleanly with [condensed-milk](https://github.com/tomooshi/condensed-milk-pi) and [pi-vcc](https://github.com/sting8k/pi-vcc).
+
+## What it does
+
+Caveman is a prompt-engineering technique that reduces assistant chat output by roughly 30–70% by dropping filler, articles, and pleasantries while preserving technical substance. pi-caveman brings this into pi as a native extension with programmatic toggling.
+
+| Feature | What it means |
+|--------|---------------|
+| **Cache-safe** | Injection bytes are static per mode. Anthropic prompt cache hit rate is unaffected. |
+| **Opt-in** | Default mode is `off`. Baseline pi behavior unchanged on install. |
+| **Tool-args exempt** | Code, file contents, tool arguments, and thinking traces are never terse-ified. |
+| **Document exemption** | Long-form prose (READMEs, ADRs, docs) produces full grammar even with caveman active. |
+| **Plays nicely** | Uses only documented pi extension hooks. Zero overlap with condensed-milk or pi-vcc. |
+
+## Quick Start
+
+```bash
+pi install npm:@tomooshi/pi-caveman
+# or from source:
+pi install https://github.com/tomooshi/caveman-milk-pi
+```
+
+Then inside pi:
+
+```
+/caveman full
+```
+
+That's it. Your next chat turn will be terse. Run `/caveman off` to disable.
+
+## Modes
+
+```
+/caveman               # show current mode and usage
+/caveman off           # disable injection (default on install)
+/caveman lite          # drop filler, keep full sentences and grammar
+/caveman full          # classic caveman — fragments, short synonyms
+/caveman ultra         # maximum compression, abbreviations, arrows
+/caveman wenyan-lite   # semi-classical Chinese terseness
+/caveman wenyan        # full 文言文 — classical literary Chinese
+/caveman wenyan-ultra  # extreme classical abbreviation
+```
+
+Your mode persists to `~/.config/pi-caveman.json` and survives pi restarts and `/reload`.
+
+### Examples
+
+**"Why is my React component re-rendering?"**
+
+- `lite`: *"Your component re-renders because you create a new object reference each render. Wrap it in `useMemo`."*
+- `full`: *"New object ref each render. Inline object prop = new ref = re-render. Wrap in `useMemo`."*
+- `ultra`: *"Inline obj prop → new ref → re-render. `useMemo`."*
+
+Same answer. You pick how many words.
+
+## Default is `off` (differs from upstream caveman)
+
+Upstream caveman auto-activates on install. pi-caveman does not. We prefer explicit consent — the baseline pi experience is unchanged until you type `/caveman full`. Your mode persists after that, so it's a one-time decision.
+
+If you want caveman always-on across all sessions, run `/caveman full` once. The config file records your preference and every future session starts with caveman active at that level. See [ADR-013](../mojo-template-pi-dev/knowledge/decisions/013-default-mode-off-opt-in.md) for the full rationale.
+
+## Document drafting
+
+Long-form documents (READMEs, ADRs, design docs, tutorials, emails) should use full grammar, not caveman style. pi-caveman's vendored SKILL.md includes an explicit Document Exemption rule that tells the model to produce normal prose for these tasks even when caveman is active.
+
+**This works most of the time, but it is not 100% reliable.** The exemption depends on the model honoring an instruction in its system prompt. Opus 4.7's stricter instruction following makes compliance more consistent than on earlier models, but you may occasionally see a model produce a gruntified document anyway.
+
+If that happens, use the manual workflow:
+
+```
+/caveman off
+# ... draft your document ...
+/caveman full
+```
+
+Each switch causes exactly one cache miss at the system prompt breakpoint, then cache hits resume. The cost is negligible compared to a long drafting session.
+
+Tool call arguments (contents of `Write(...)`, `Edit(...)`) are always normal code or prose regardless of caveman mode. This is enforced by both caveman's ruleset and by how models treat structured tool arguments.
+
+## What caveman does NOT affect
+
+- **Thinking / reasoning tokens** — caveman is a system prompt rule, applied only to final chat output. Thinking traces are untouched.
+- **Tool arguments** — `Write`, `Edit`, `Bash` commands receive normal content. Your code and file edits are never terse-ified.
+- **Tool results you read** — file contents, bash output, and search results pass through unchanged. (For compression of those, see condensed-milk.)
+- **Error messages and confirmations** — caveman's auto-clarity exemption kicks in for security warnings and irreversible-action prompts.
+
+## Compatibility with other extensions
+
+pi-caveman operates on the system prompt via pi's `before_agent_start` hook. It does not touch tool results, message history, or compaction. This means it stacks cleanly with:
+
+### condensed-milk
+
+Compresses tool output (bash, reads, grep, build logs, test runners) and stale history messages. Runs on `tool_execution_end` and `context` hooks — entirely different from caveman's hook. Zero overlap. Different commands (`/compress-stats`, `/compress-config` vs `/caveman`).
+
+### pi-vcc
+
+Algorithmic conversation compactor. Runs on `session_before_compact` — not touched by caveman. Bonus property: pi-vcc replaces pi's default LLM-based summarization, which means caveman cannot affect summary quality even in degenerate cases. Running all three together is strictly safer than running caveman with pi's default compactor.
+
+### The full stack
+
+| Layer | Extension |
+|-------|-----------|
+| System prompt | pi-caveman |
+| Tool output (write-time) | condensed-milk |
+| Message history (retroactive) | condensed-milk |
+| Compaction summary | pi-vcc |
+
+Each owns one event, one transform, one concern. None share state.
+
+## Cache safety
+
+pi-caveman is designed around one invariant: the injected text is a pure function of `(mode, SKILL.md)`. Nothing else influences injection bytes — no timestamps, no turn counters, no session IDs, no per-request filesystem reads.
+
+This means Anthropic's prompt cache stays warm across turns. Mode changes cause exactly one cache miss (expected, user-initiated), then cache hits resume. Measured impact on cache hit rate with caveman active versus off: under 1% difference.
+
+For the detailed invariants and review checklist, see [ADR-015](../mojo-template-pi-dev/knowledge/decisions/015-cache-safety-invariants.md).
+
+## Troubleshooting
+
+**`pi-caveman could not load SKILL.md at <path>`**
+
+The vendored SKILL.md is missing. Reinstall the extension or verify `skill/SKILL.md` exists in the extension directory.
+
+**`pi-caveman SKILL.md ... is empty`** or **`is malformed`**
+
+The vendored file was corrupted. Restore via `bash scripts/sync-skill.sh`, review the diff, and commit.
+
+**`pi-caveman config: invalid mode 'X'`**
+
+The config file has an unknown mode. Delete `~/.config/pi-caveman.json` to reset to defaults, or edit it to use one of the valid modes.
+
+**`pi-caveman config ... is not a JSON object`**
+
+The config file is corrupted. Delete `~/.config/pi-caveman.json` to reset.
+
+**Extension not activating on new session**
+
+pi-caveman only runs when pi's extension loader discovers it. Verify the install path with `pi install --list` or check that `@tomooshi/pi-caveman` is in your pi settings `packages` array.
+
+## Credits
+
+Based on [caveman](https://github.com/JuliusBrussee/caveman) by Julius Brussee (MIT). The ruleset, intensity levels, and exemption concepts are Julius's work — this extension ports them into pi's extension system with cache-safe injection and native toggling. See [CREDITS.md](./CREDITS.md) for the pinned upstream SHA.
+
+pi extension system by [Mario Zechner](https://github.com/badlogic/pi-mono).
+
+## License
+
+MIT, matching upstream caveman.

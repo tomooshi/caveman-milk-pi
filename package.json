@@ -1,0 +1,49 @@
+{
+  "name": "@tomooshi/pi-caveman",
+  "version": "0.1.0",
+  "description": "pi extension that injects caveman terseness rules into the system prompt. Cache-safe, opt-in, plays nicely with condensed-milk and pi-vcc.",
+  "main": "index.ts",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "caveman",
+    "token-efficiency",
+    "terseness"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomooshi/caveman-milk-pi.git"
+  },
+  "homepage": "https://github.com/tomooshi/caveman-milk-pi",
+  "license": "MIT",
+  "author": "tomooshi",
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@sinclair/typebox": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "files": [
+    "index.ts",
+    "src/",
+    "skill/",
+    "README.md",
+    "CREDITS.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@mariozechner/pi-coding-agent": "^0.67.4",
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4"
+  }
+}
