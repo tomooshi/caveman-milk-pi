@@ -1,8 +1,14 @@
 # Changelog
 
-All notable changes to pi-caveman are documented in this file.
+All notable changes to caveman-milk-pi are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.5] - 2026-04-16
+
+### Changed
+
+- **Project name aligned with repo name in user-facing copy.** README, CHANGELOG, code comments, and error messages now refer to the project as `caveman-milk-pi` (matching the GitHub repo). The npm package name (`@tomooshi/pi-caveman`) and config file path (`~/.config/pi-caveman.json`) are deliberately unchanged to avoid breaking existing installs and persisted user config. Future v0.2.x release may align those too as a coordinated breaking change.
 
 ## [0.1.4] - 2026-04-16
 

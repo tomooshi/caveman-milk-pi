@@ -2,7 +2,7 @@
 
 ## caveman upstream
 
-pi-caveman is a pi-native port of caveman by Julius Brussee.
+caveman-milk-pi is a pi-native port of caveman by Julius Brussee.
 
 - **Project:** caveman
 - **Author:** Julius Brussee ([@JuliusBrussee](https://github.com/JuliusBrussee))
@@ -22,7 +22,7 @@ injection and pi-native toggling.
 - Source path: `skills/caveman/SKILL.md`
 
 Locally, the vendored `skill/SKILL.md` appends a `## Document Exemption`
-section added by pi-caveman (not in upstream). This exemption instructs
+section added by caveman-milk-pi (not in upstream). This exemption instructs
 the model to use full prose for long-form documents when caveman is active.
 
 To update: run `bash scripts/sync-skill.sh`, review the diff, commit.

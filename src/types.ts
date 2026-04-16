@@ -1,4 +1,4 @@
-// Flat data types for pi-caveman. No classes, no methods.
+// Flat data types for caveman-milk-pi. No classes, no methods.
 // See ADR-015 — these shapes are part of the cache-safety invariants.
 
 export type CavemanMode =

@@ -1,4 +1,4 @@
-// pi-caveman — inject caveman terseness rules into pi's system prompt.
+// caveman-milk-pi — inject caveman terseness rules into pi's system prompt.
 //
 // Architecture:
 //   - session_start: load config + SKILL.md, compute injection, cache it

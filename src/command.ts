@@ -44,7 +44,7 @@ export function registerCavemanCommand(pi: ExtensionAPI, deps: CommandDeps): voi
         }
         const text = current.text.length === 0 ? "(mode=off — no injection)" : current.text;
         const info =
-          `=== pi-caveman injection diagnostic ===\n` +
+          `=== caveman-milk-pi injection diagnostic ===\n` +
           `mode: ${current.mode}\n` +
           `hash: ${current.sourceHash}\n` +
           `length: ${current.text.length} chars\n` +

@@ -1,4 +1,4 @@
-# pi-caveman
+# caveman-milk-pi
 
 A [pi](https://github.com/badlogic/pi-mono) extension that injects [caveman](https://github.com/JuliusBrussee/caveman) terseness rules into pi's system prompt. Shorter chat output, without breaking the prompt cache.
 
@@ -6,9 +6,9 @@ Cache-safe. Opt-in. Designed to stack cleanly with [condensed-milk](https://gith
 
 ## What it does
 
-Caveman is a prompt-engineering technique that reduces assistant chat output by dropping filler, articles, and pleasantries while preserving technical substance. pi-caveman brings this into pi as a native extension with programmatic toggling.
+Caveman is a prompt-engineering technique that reduces assistant chat output by dropping filler, articles, and pleasantries while preserving technical substance. caveman-milk-pi brings this into pi as a native extension with programmatic toggling.
 
-Upstream caveman benchmarks claim ~30–70% reduction depending on prompt type. pi-caveman has not yet performed independent benchmarks; observed terseness on Opus 4.7 in live sessions is qualitative and noticeable but not yet quantified.
+Upstream caveman benchmarks claim ~30–70% reduction depending on prompt type. caveman-milk-pi has not yet performed independent benchmarks; observed terseness on Opus 4.7 in live sessions is qualitative and noticeable but not yet quantified.
 
 | Feature | Status |
 |--------|--------|
@@ -61,13 +61,13 @@ Same answer. You pick how many words.
 
 ## Default is `off` (differs from upstream caveman)
 
-Upstream caveman auto-activates on install. pi-caveman does not. We prefer explicit consent — the baseline pi experience is unchanged until you type `/caveman full`. Your mode persists after that, so it's a one-time decision.
+Upstream caveman auto-activates on install. caveman-milk-pi does not. We prefer explicit consent — the baseline pi experience is unchanged until you type `/caveman full`. Your mode persists after that, so it's a one-time decision.
 
 If you want caveman always-on across all sessions, run `/caveman full` once. The config file records your preference and every future session starts with caveman active at that level.
 
 ## Document drafting
 
-Long-form documents (READMEs, ADRs, design docs, tutorials, emails) should use full grammar, not caveman style. pi-caveman's vendored SKILL.md includes an explicit Document Exemption rule that tells the model to produce normal prose for these tasks even when caveman is active.
+Long-form documents (READMEs, ADRs, design docs, tutorials, emails) should use full grammar, not caveman style. caveman-milk-pi's vendored SKILL.md includes an explicit Document Exemption rule that tells the model to produce normal prose for these tasks even when caveman is active.
 
 **This works most of the time, but it is not 100% reliable.** The exemption depends on the model honoring an instruction in its system prompt. Opus 4.7's stricter instruction following makes compliance more consistent than on earlier models, but you may occasionally see a model produce a gruntified document anyway.
 
@@ -131,7 +131,7 @@ If you run any of these tests, results are welcome as PRs to the upstream cavema
 
 ## Compatibility with other extensions
 
-pi-caveman operates on the system prompt via pi's `before_agent_start` hook. It does not touch tool results, message history, or compaction. This means it stacks cleanly with:
+caveman-milk-pi operates on the system prompt via pi's `before_agent_start` hook. It does not touch tool results, message history, or compaction. This means it stacks cleanly with:
 
 ### condensed-milk
 
@@ -145,7 +145,7 @@ Algorithmic conversation compactor. Runs on `session_before_compact` — not tou
 
 | Layer | Extension |
 |-------|-----------|
-| System prompt | pi-caveman |
+| System prompt | caveman-milk-pi |
 | Tool output (write-time) | condensed-milk |
 | Message history (retroactive) | condensed-milk |
 | Compaction summary | pi-vcc |
@@ -154,7 +154,7 @@ Each owns one event, one transform, one concern. None share state.
 
 ## Cache safety
 
-pi-caveman is designed around one invariant: the injected text is a pure function of `(mode, SKILL.md)`. Nothing else influences injection bytes — no timestamps, no turn counters, no session IDs, no per-request filesystem reads.
+caveman-milk-pi is designed around one invariant: the injected text is a pure function of `(mode, SKILL.md)`. Nothing else influences injection bytes — no timestamps, no turn counters, no session IDs, no per-request filesystem reads.
 
 This means Anthropic's prompt cache stays warm across turns. Mode changes cause exactly one cache miss (expected, user-initiated), then cache hits resume.
 
@@ -187,25 +187,25 @@ If the injection text is empty (mode=off) or shows a mode other than what you se
 
 ## Troubleshooting
 
-**`pi-caveman could not load SKILL.md at <path>`**
+**`caveman-milk-pi could not load SKILL.md at <path>`**
 
 The vendored SKILL.md is missing. Reinstall the extension or verify `skill/SKILL.md` exists in the extension directory.
 
-**`pi-caveman SKILL.md ... is empty`** or **`is malformed`**
+**`caveman-milk-pi SKILL.md ... is empty`** or **`is malformed`**
 
 The vendored file was corrupted. Restore via `bash scripts/sync-skill.sh`, review the diff, and commit.
 
-**`pi-caveman config: invalid mode 'X'`**
+**`caveman-milk-pi config: invalid mode 'X'`**
 
 The config file has an unknown mode. Delete `~/.config/pi-caveman.json` to reset to defaults, or edit it to use one of the valid modes.
 
-**`pi-caveman config ... is not a JSON object`**
+**`caveman-milk-pi config ... is not a JSON object`**
 
 The config file is corrupted. Delete `~/.config/pi-caveman.json` to reset.
 
 **Extension not activating on new session**
 
-pi-caveman only runs when pi's extension loader discovers it. Verify the install path with `pi install --list` or check that `@tomooshi/pi-caveman` is in your pi settings `packages` array.
+caveman-milk-pi only runs when pi's extension loader discovers it. Verify the install path with `pi install --list` or check that `@tomooshi/pi-caveman` is in your pi settings `packages` array.
 
 ## Credits
 

@@ -30,19 +30,19 @@ export function loadSkillContent(): string {
   const skillPath = getSkillPath();
   if (!fs.existsSync(skillPath)) {
     throw new Error(
-      `pi-caveman could not load SKILL.md at ${skillPath}. ` +
+      `caveman-milk-pi could not load SKILL.md at ${skillPath}. ` +
         `Reinstall the extension or verify skill/SKILL.md exists.`,
     );
   }
   const content = fs.readFileSync(skillPath, "utf8");
   if (content.length === 0) {
     throw new Error(
-      `pi-caveman SKILL.md at ${skillPath} is empty. Restore via scripts/sync-skill.sh.`,
+      `caveman-milk-pi SKILL.md at ${skillPath} is empty. Restore via scripts/sync-skill.sh.`,
     );
   }
   if (!content.includes("## Intensity")) {
     throw new Error(
-      `pi-caveman SKILL.md at ${skillPath} is malformed (no "## Intensity" section). ` +
+      `caveman-milk-pi SKILL.md at ${skillPath} is malformed (no "## Intensity" section). ` +
         `Restore via scripts/sync-skill.sh.`,
     );
   }

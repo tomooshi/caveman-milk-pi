@@ -1,4 +1,4 @@
-// Config load/save for pi-caveman.
+// Config load/save for caveman-milk-pi.
 //
 // Transform: ~/.config/pi-caveman.json  ->  CavemanConfig
 // Fail loud per ADR-012 — no silent defaults on invalid data.
@@ -23,14 +23,14 @@ export function getConfigPath(): string {
 export function validateMode(raw: unknown): CavemanMode {
   if (typeof raw !== "string") {
     throw new Error(
-      `pi-caveman config: mode must be a string, got ${typeof raw}. ` +
+      `caveman-milk-pi config: mode must be a string, got ${typeof raw}. ` +
         `Valid modes: ${VALID_MODES.join(", ")}. ` +
         `Delete ${CONFIG_PATH} to reset.`,
     );
   }
   if (!(VALID_MODES as readonly string[]).includes(raw)) {
     throw new Error(
-      `pi-caveman config: invalid mode '${raw}'. ` +
+      `caveman-milk-pi config: invalid mode '${raw}'. ` +
         `Valid modes: ${VALID_MODES.join(", ")}. ` +
         `Delete ${CONFIG_PATH} to reset.`,
     );
@@ -51,7 +51,7 @@ export function loadConfig(): CavemanConfig {
 
   if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
     throw new Error(
-      `pi-caveman config at ${CONFIG_PATH} is not a JSON object. ` +
+      `caveman-milk-pi config at ${CONFIG_PATH} is not a JSON object. ` +
         `Delete the file to reset to defaults.`,
     );
   }
