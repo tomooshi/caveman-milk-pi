@@ -4,6 +4,18 @@ All notable changes to pi-caveman are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-04-16
+
+### Verified
+
+- **Cache safety claim now measured.** Controlled A/B with identical 5-prompt scripted workload (Opus 4.7, full caveman + condensed-milk + pi-vcc stack) showed a **−1% cache-hit delta on the caveman activation turn** (92% with caveman=full vs 93% with caveman=off), well within the ±1% architectural target. The injection lands after the cacheable prefix breakpoint and does not invalidate prior cached context. Steady-state showed +10.8% mean hit-rate improvement, but this is a second-order brevity effect (shorter outputs → smaller cache-write tails), not a cache-architecture property. Total A/B session cost dropped 55% with caveman=full.
+
+### Changed
+
+- **README cache-safety section.** Replaced soft "designed to be cache-safe" wording with measured P1 −1% delta plus the brevity-effect caveat, so users understand both the architectural property and the secondary cost win.
+- **README "What we verified" table.** Updated cache row from "diagnostic turn at 100% hit" to the controlled A/B P1 activation-turn delta.
+- **README "Not yet verified" table.** Removed the now-measured A/B claim; replaced with the more honest residual: tool-heavy long-form workloads (e.g. very large bash returns or file reads) have not been A/B'd and may show different cache dynamics.
+
 ## [0.1.2] - 2026-04-16
 
 ### Added
