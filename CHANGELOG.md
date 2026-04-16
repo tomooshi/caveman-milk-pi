@@ -4,11 +4,19 @@ All notable changes to caveman-milk-pi are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-16
+
+### Changed (BREAKING)
+
+- **npm package renamed:** `@tomooshi/pi-caveman` → `@tomooshi/caveman-milk-pi`. Install command is now `pi install npm:@tomooshi/caveman-milk-pi`.
+- **Config file path renamed:** `~/.config/pi-caveman.json` → `~/.config/caveman-milk-pi.json`. **Auto-migration shipped:** on first load after upgrade, if the legacy file exists and the new path does not, it is renamed (preserves your persisted mode with no manual action). The migration is one-shot and silent. After the first session post-upgrade you can verify with `ls ~/.config/caveman-milk-pi.json`.
+- Both renames bring the project into full alignment with the repo name `caveman-milk-pi`.
+
 ## [0.1.5] - 2026-04-16
 
 ### Changed
 
-- **Project name aligned with repo name in user-facing copy.** README, CHANGELOG, code comments, and error messages now refer to the project as `caveman-milk-pi` (matching the GitHub repo). The npm package name (`@tomooshi/pi-caveman`) and config file path (`~/.config/pi-caveman.json`) are deliberately unchanged to avoid breaking existing installs and persisted user config. Future v0.2.x release may align those too as a coordinated breaking change.
+- **Project name aligned with repo name in user-facing copy.** README, CHANGELOG, code comments, and error messages now refer to the project as `caveman-milk-pi` (matching the GitHub repo). The npm package name and config file path were intentionally deferred to v0.2.0 to keep this release non-breaking.
 
 ## [0.1.4] - 2026-04-16
 

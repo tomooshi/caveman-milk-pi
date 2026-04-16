@@ -21,7 +21,7 @@ Upstream caveman benchmarks claim ~30–70% reduction depending on prompt type. 
 ## Quick Start
 
 ```bash
-pi install npm:@tomooshi/pi-caveman
+pi install npm:@tomooshi/caveman-milk-pi
 # or from source:
 pi install https://github.com/tomooshi/caveman-milk-pi
 ```
@@ -47,7 +47,7 @@ That's it. Your next chat turn will be terse. Run `/caveman off` to disable.
 /caveman wenyan-ultra  # extreme classical abbreviation
 ```
 
-Your mode persists to `~/.config/pi-caveman.json` and survives pi restarts and `/reload`.
+Your mode persists to `~/.config/caveman-milk-pi.json` and survives pi restarts and `/reload`.
 
 ### Examples
 
@@ -197,15 +197,15 @@ The vendored file was corrupted. Restore via `bash scripts/sync-skill.sh`, revie
 
 **`caveman-milk-pi config: invalid mode 'X'`**
 
-The config file has an unknown mode. Delete `~/.config/pi-caveman.json` to reset to defaults, or edit it to use one of the valid modes.
+The config file has an unknown mode. Delete `~/.config/caveman-milk-pi.json` to reset to defaults, or edit it to use one of the valid modes.
 
 **`caveman-milk-pi config ... is not a JSON object`**
 
-The config file is corrupted. Delete `~/.config/pi-caveman.json` to reset.
+The config file is corrupted. Delete `~/.config/caveman-milk-pi.json` to reset.
 
 **Extension not activating on new session**
 
-caveman-milk-pi only runs when pi's extension loader discovers it. Verify the install path with `pi install --list` or check that `@tomooshi/pi-caveman` is in your pi settings `packages` array.
+caveman-milk-pi only runs when pi's extension loader discovers it. Verify the install path with `pi install --list` or check that `@tomooshi/caveman-milk-pi` is in your pi settings `packages` array.
 
 ## Credits
 
