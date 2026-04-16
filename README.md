@@ -6,15 +6,17 @@ Cache-safe. Opt-in. Designed to stack cleanly with [condensed-milk](https://gith
 
 ## What it does
 
-Caveman is a prompt-engineering technique that reduces assistant chat output by roughly 30–70% by dropping filler, articles, and pleasantries while preserving technical substance. pi-caveman brings this into pi as a native extension with programmatic toggling.
+Caveman is a prompt-engineering technique that reduces assistant chat output by dropping filler, articles, and pleasantries while preserving technical substance. pi-caveman brings this into pi as a native extension with programmatic toggling.
 
-| Feature | What it means |
-|--------|---------------|
-| **Cache-safe** | Injection bytes are static per mode. Anthropic prompt cache hit rate is unaffected. |
+Upstream caveman benchmarks claim ~30–70% reduction depending on prompt type. pi-caveman has not yet performed independent benchmarks; observed terseness on Opus 4.7 in live sessions is qualitative and noticeable but not yet quantified.
+
+| Feature | Status |
+|--------|--------|
+| **Cache-safe** | Injection bytes are static per mode (verified by 18 deterministic tests). Live observation: cached prefix reusable across turns. Controlled A/B not yet measured. |
 | **Opt-in** | Default mode is `off`. Baseline pi behavior unchanged on install. |
-| **Tool-args exempt** | Code, file contents, tool arguments, and thinking traces are never terse-ified. |
-| **Document exemption** | Long-form prose (READMEs, ADRs, docs) produces full grammar even with caveman active. |
-| **Plays nicely** | Uses only documented pi extension hooks. Zero overlap with condensed-milk or pi-vcc. |
+| **Tool-args exempt** | Code, file contents, tool arguments, and thinking traces are never terse-ified by design. Not yet stress-tested with v0.1.1. |
+| **Document exemption** | Long-form prose drafts produce full grammar (v0.1.1 narrowed the rule scope after v0.1.0 over-exempted technical Q&A). Not 100% reliable; manual workflow available as fallback. |
+| **Plays nicely** | Uses only documented pi extension hooks. Zero overlap with condensed-milk or pi-vcc, verified by reading pi-mono source. Three-way stack run successfully for ~10 turns. |
 
 ## Quick Start
 
@@ -81,10 +83,19 @@ Each switch causes exactly one cache miss at the system prompt breakpoint, then 
 
 Tool call arguments (contents of `Write(...)`, `Edit(...)`) are always normal code or prose regardless of caveman mode. This is enforced by both caveman's ruleset and by how models treat structured tool arguments.
 
+### v0.1.1 exemption scope
+
+The Document Exemption rule was tightened in v0.1.1 after live dogfooding showed the v0.1.0 rule was too permissive (it treated most technical Q&A as exempt, defeating caveman's persistence for chat). The current rule:
+
+- **Exempts:** explicit document drafts, markdown files written to disk, extended tutorials the user explicitly requests (>3 paragraphs of instructional prose), emails or PR descriptions the user asks to draft, content inside Write/Edit tool arguments
+- **Does NOT exempt:** technical Q&A ("what do you think", "is this correct", "explain X"), comparisons, recommendations, code review, debugging analysis, status updates
+
+If you observe verbose chat responses despite caveman being active, run `/caveman diff` first to confirm the v0.1.1 SKILL is loaded (look for the "Persistence Anchor — Bottom" section in the output).
+
 ## What caveman does NOT affect
 
-- **Thinking / reasoning tokens** — caveman is a system prompt rule, applied only to final chat output. Thinking traces are untouched.
-- **Tool arguments** — `Write`, `Edit`, `Bash` commands receive normal content. Your code and file edits are never terse-ified.
+- **Thinking / reasoning tokens** — caveman is a system prompt rule, applied only to final chat output. Thinking traces are untouched (confirmed by upstream caveman docs and pi-ai's separate handling of `thinking` blocks).
+- **Tool arguments** — `Write`, `Edit`, `Bash` commands are designed to receive normal content. The vendored SKILL explicitly says "Code/commits/PRs: write normal" and "Content inside Write/Edit tool call arguments — always normal prose." Not yet independently stress-tested in this fork; report regressions if you see them.
 - **Tool results you read** — file contents, bash output, and search results pass through unchanged. (For compression of those, see condensed-milk.)
 - **Error messages and confirmations** — caveman's auto-clarity exemption kicks in for security warnings and irreversible-action prompts.
 
