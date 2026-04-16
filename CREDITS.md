@@ -23,8 +23,7 @@ injection and pi-native toggling.
 
 Locally, the vendored `skill/SKILL.md` appends a `## Document Exemption`
 section added by pi-caveman (not in upstream). This exemption instructs
-the model to use full prose for long-form documents, pursuant to ADR-014
-in the mojo-template-pi-dev vault.
+the model to use full prose for long-form documents when caveman is active.
 
 To update: run `bash scripts/sync-skill.sh`, review the diff, commit.
 

@@ -10,7 +10,7 @@
 //   - Mode change is the ONLY valid invalidation trigger
 //   - No per-request filesystem reads, no dynamic content, no branching
 //
-// See knowledge/decisions/ADR-009 through ADR-015 for full rationale.
+// Design rationale documented in maintainer's notes.
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { loadConfig, saveConfig } from "./src/config.js";

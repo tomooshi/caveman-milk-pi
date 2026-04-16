@@ -63,7 +63,7 @@ Same answer. You pick how many words.
 
 Upstream caveman auto-activates on install. pi-caveman does not. We prefer explicit consent — the baseline pi experience is unchanged until you type `/caveman full`. Your mode persists after that, so it's a one-time decision.
 
-If you want caveman always-on across all sessions, run `/caveman full` once. The config file records your preference and every future session starts with caveman active at that level. See [ADR-013](../mojo-template-pi-dev/knowledge/decisions/013-default-mode-off-opt-in.md) for the full rationale.
+If you want caveman always-on across all sessions, run `/caveman full` once. The config file records your preference and every future session starts with caveman active at that level.
 
 ## Document drafting
 
@@ -130,7 +130,16 @@ This means Anthropic's prompt cache stays warm across turns. Mode changes cause 
 
 **Status of empirical verification:** 18 deterministic unit tests confirm that the injection bytes are byte-identical per mode and stable across repeated computations. Live-session observation over 9 turns on Opus 4.7 with the full caveman/condensed-milk/pi-vcc stack showed the cached prefix remained reusable (a diagnostic turn returned 100% cache hit with the caveman injection present in the cached prefix). A controlled A/B comparison between matched caveman=off and caveman=full sessions has not yet been performed, so the exact hit-rate delta under identical workloads is not yet measured. The architectural guarantee — static injection bytes per mode, no per-request variation — holds either way.
 
-For the detailed invariants and review checklist, see [ADR-015](../mojo-template-pi-dev/knowledge/decisions/015-cache-safety-invariants.md).
+The full set of invariants:
+
+1. Injection is a pure function of `(mode, SKILL.md)` — no timestamps, counters, or per-request content
+2. Mode change is the only valid cache invalidation trigger
+3. No filesystem reads during `before_agent_start` — injection cached in memory
+4. No conditional content varying per request
+5. Config file changes take effect at next session start, not mid-session
+6. No `cache_control` manipulation — pi-ai owns placement
+7. No `anthropic-beta` header injection
+8. SKILL.md content is append-only to systemPrompt
 
 ## Diagnostic: `/caveman diff`
 
