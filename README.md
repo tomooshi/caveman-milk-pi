@@ -115,9 +115,23 @@ Each owns one event, one transform, one concern. None share state.
 
 pi-caveman is designed around one invariant: the injected text is a pure function of `(mode, SKILL.md)`. Nothing else influences injection bytes — no timestamps, no turn counters, no session IDs, no per-request filesystem reads.
 
-This means Anthropic's prompt cache stays warm across turns. Mode changes cause exactly one cache miss (expected, user-initiated), then cache hits resume. Measured impact on cache hit rate with caveman active versus off: under 1% difference.
+This means Anthropic's prompt cache stays warm across turns. Mode changes cause exactly one cache miss (expected, user-initiated), then cache hits resume.
+
+**Status of empirical verification:** 18 deterministic unit tests confirm that the injection bytes are byte-identical per mode and stable across repeated computations. Live-session observation over 9 turns on Opus 4.7 with the full caveman/condensed-milk/pi-vcc stack showed the cached prefix remained reusable (a diagnostic turn returned 100% cache hit with the caveman injection present in the cached prefix). A controlled A/B comparison between matched caveman=off and caveman=full sessions has not yet been performed, so the exact hit-rate delta under identical workloads is not yet measured. The architectural guarantee — static injection bytes per mode, no per-request variation — holds either way.
 
 For the detailed invariants and review checklist, see [ADR-015](../mojo-template-pi-dev/knowledge/decisions/015-cache-safety-invariants.md).
+
+## Diagnostic: `/caveman diff`
+
+If caveman seems to not be reducing your output tokens as expected, run:
+
+```
+/caveman diff
+```
+
+This prints the current mode, the cached injection hash, and the full text that is being appended to your system prompt. Use this to verify the extension is active and that the injection content matches what you expect for your mode.
+
+If the injection text is empty (mode=off) or shows a mode other than what you set, run `/caveman <mode>` to correct it. If `/caveman diff` says the cache is not initialized, run `/reload` or restart pi.
 
 ## Troubleshooting
 

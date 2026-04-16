@@ -1,6 +1,6 @@
 {
   "name": "@tomooshi/pi-caveman",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "pi extension that injects caveman terseness rules into the system prompt. Cache-safe, opt-in, plays nicely with condensed-milk and pi-vcc.",
   "main": "index.ts",
   "type": "module",

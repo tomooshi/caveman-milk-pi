@@ -18,7 +18,7 @@ export interface CommandDeps {
 export function registerCavemanCommand(pi: ExtensionAPI, deps: CommandDeps): void {
   pi.registerCommand("caveman", {
     description:
-      "Toggle caveman terseness mode. Usage: /caveman [off|lite|full|ultra|wenyan|wenyan-lite|wenyan-ultra]",
+      "Toggle caveman terseness mode. Usage: /caveman [off|lite|full|ultra|wenyan|wenyan-lite|wenyan-ultra|diff]",
     handler: async (args, ctx) => {
       const trimmed = (args ?? "").trim();
 
@@ -26,9 +26,30 @@ export function registerCavemanCommand(pi: ExtensionAPI, deps: CommandDeps): voi
         const current = deps.getCache();
         const mode = current?.mode ?? "off";
         ctx.ui.notify(
-          `caveman: ${mode}. Run /caveman <mode> to change. Valid: ${VALID_MODES.join(", ")}`,
+          `caveman: ${mode}. Run /caveman <mode> to change. Valid: ${VALID_MODES.join(", ")}. Diagnostic: /caveman diff`,
           "info",
         );
+        return;
+      }
+
+      // Diagnostic: dump the cached injection text so user can verify what the model actually sees.
+      if (trimmed === "diff") {
+        const current = deps.getCache();
+        if (!current) {
+          ctx.ui.notify(
+            "caveman: cache not initialized. Run /reload or restart pi.",
+            "warning",
+          );
+          return;
+        }
+        const text = current.text.length === 0 ? "(mode=off — no injection)" : current.text;
+        const info =
+          `=== pi-caveman injection diagnostic ===\n` +
+          `mode: ${current.mode}\n` +
+          `hash: ${current.sourceHash}\n` +
+          `length: ${current.text.length} chars\n` +
+          `--- injection text ---\n${text}\n--- end ---`;
+        ctx.ui.notify(info, "info");
         return;
       }
 
