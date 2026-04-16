@@ -99,6 +99,35 @@ If you observe verbose chat responses despite caveman being active, run `/cavema
 - **Tool results you read** — file contents, bash output, and search results pass through unchanged. (For compression of those, see condensed-milk.)
 - **Error messages and confirmations** — caveman's auto-clarity exemption kicks in for security warnings and irreversible-action prompts.
 
+## What we verified
+
+Claims in this README that are backed by actual measurement on this fork (Opus 4.7, full caveman + condensed-milk + pi-vcc stack):
+
+| Claim | How verified |
+|-------|--------------|
+| Injection bytes are deterministic per mode | 18 unit tests pass, all asserting byte-identical output across repeated calls |
+| Injection bytes contain expected mode-specific intensity row | 18 unit tests covering all 7 modes |
+| Cache prefix remains reusable with caveman active | Live `/compress-stats` over 9 turns showed a diagnostic turn at 100% cache hit with caveman injection in the cached prefix |
+| Code written via Write tool is full prose, not gruntified | Wrote a real Python file with caveman=full active; docstrings + comments rendered as full grammar (test-fib.py with Args/Returns/Raises sections) |
+| `/caveman diff` reports current injection state correctly | Live verification: diff output showed correct mode, hash, and full SKILL content |
+| Document Exemption v0.1.1 rule produces terse chat for technical Q&A | Live verification: after the v0.1.1 fix, technical questions consistently produced caveman-style fragmented responses |
+| Zero handler conflict with enforcement extensions that also use `before_agent_start` | Source audit confirmed: maintainer's enforcement extension explicitly avoids modifying systemPrompt for caching reasons. caveman is the only systemPrompt mutator in the documented stack |
+| Compatibility with condensed-milk and pi-vcc | Three-way stack ran cleanly for ~10+ turns with no crashes, command collisions, or extension errors |
+
+## Not yet verified
+
+Claims that are architecturally sound but not yet backed by measurement:
+
+| Claim | What's needed |
+|-------|---------------|
+| Cache hit-rate delta with caveman active vs off is under 1% | Controlled A/B: matched 5-turn sessions, one at `caveman=off`, one at `caveman=full`, identical prompts. Compare `/compress-stats` numbers per-turn. |
+| Wenyan modes produce correct classical Chinese output | One session per wenyan variant. Verify SKILL filter, terminal CJK rendering, model output quality. |
+| Caveman persistence holds across 30+ turn sessions | Real long-session work with sample points at turn 5, 15, 30. Score caveman compliance against a 5-point rubric. |
+| Tool-call quality holds in `ultra` mode (more aggressive than `full`) | Same Write/Edit test as v0.2.0-01 but with `/caveman ultra` |
+| Larger files (500+ lines) don't trigger caveman drift in tool args | Write or Edit a substantial file with caveman=full. Inspect for fragmentation. |
+
+If you run any of these tests, results are welcome as PRs to the upstream caveman project or as issues here.
+
 ## Compatibility with other extensions
 
 pi-caveman operates on the system prompt via pi's `before_agent_start` hook. It does not touch tool results, message history, or compaction. This means it stacks cleanly with:
