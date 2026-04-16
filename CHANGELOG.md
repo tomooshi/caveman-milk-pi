@@ -4,6 +4,17 @@ All notable changes to pi-caveman are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-04-16
+
+### Verified
+
+- **`wenyan-full` mode validated.** Live test on Opus 4.7 confirmed: SKILL parser correctly filters to only the `wenyan-full` intensity row (no leakage from other modes), CJK content survives injection round-trip, model output matches classical register criteria (verb-object order, classical particles 之/故, technical terms preserved as English, ~70% character density vs English equivalent). SKILL.md file-level integrity confirmed for all three wenyan variants (storage layer is fine for all of them).
+
+### Changed
+
+- **README "What we verified" table.** Added wenyan-full row with the validation criteria above.
+- **README "Not yet verified" table.** Replaced the generic "wenyan modes" entry with a more precise note that `wenyan-lite` and `wenyan-ultra` runtime behavior are still pending — file-level integrity already confirmed for all three.
+
 ## [0.1.3] - 2026-04-16
 
 ### Verified

@@ -113,6 +113,7 @@ Claims in this README that are backed by actual measurement on this fork (Opus 4
 | Document Exemption v0.1.1 rule produces terse chat for technical Q&A | Live verification: after the v0.1.1 fix, technical questions consistently produced caveman-style fragmented responses |
 | Zero handler conflict with enforcement extensions that also use `before_agent_start` | Source audit confirmed: maintainer's enforcement extension explicitly avoids modifying systemPrompt for caching reasons. caveman is the only systemPrompt mutator in the documented stack |
 | Compatibility with condensed-milk and pi-vcc | Three-way stack ran cleanly for ~10+ turns with no crashes, command collisions, or extension errors |
+| `wenyan-full` mode produces correct classical Chinese | Live test on Opus 4.7: SKILL parser correctly filters to only the `wenyan-full` intensity row (no leakage from other modes), CJK content survives injection round-trip, model output matches classical register criteria (verb-object order, classical particles 之/故, technical terms preserved as English, ~70% character density vs English equivalent) |
 
 ## Not yet verified
 
@@ -121,7 +122,7 @@ Claims that are architecturally sound but not yet backed by measurement:
 | Claim | What's needed |
 |-------|---------------|
 | Cache hit-rate delta in tool-heavy long-form workloads | A/B verified for the 5-prompt mixed-content scenario. Workloads dominated by large tool outputs (heavy file reads, big bash returns) may show different cache dynamics and have not been measured. |
-| Wenyan modes produce correct classical Chinese output | One session per wenyan variant. Verify SKILL filter, terminal CJK rendering, model output quality. |
+| `wenyan-lite` and `wenyan-ultra` modes | `wenyan-full` was validated in v0.1.4. The other two classical Chinese variants are not yet verified. SKILL.md file-level integrity confirmed for all three, so the storage layer is fine; what remains is runtime behavior testing for the lite and ultra variants. |
 | Caveman persistence holds across 30+ turn sessions | Real long-session work with sample points at turn 5, 15, 30. Score caveman compliance against a 5-point rubric. |
 | Tool-call quality holds in `ultra` mode (more aggressive than `full`) | Same Write/Edit test as v0.2.0-01 but with `/caveman ultra` |
 | Larger files (500+ lines) don't trigger caveman drift in tool args | Write or Edit a substantial file with caveman=full. Inspect for fragmentation. |
