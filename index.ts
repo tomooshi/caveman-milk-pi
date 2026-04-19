@@ -28,7 +28,9 @@ export default (pi: ExtensionAPI) => {
     const config = loadConfig();
     const skillContent = loadSkillContent();
     cache = computeInjection(config.mode, skillContent);
-    ctx.ui.setStatus("caveman", `caveman: ${config.mode}`);
+    if (config.showStatus) {
+      ctx.ui.setStatus("caveman", `caveman: ${config.mode}`);
+    }
   });
 
   pi.on("before_agent_start", async (event) => {
