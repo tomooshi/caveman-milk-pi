@@ -49,6 +49,17 @@ That's it. Your next chat turn will be terse. Run `/caveman off` to disable.
 
 Your mode persists to `~/.config/caveman-milk-pi.json` and survives pi restarts and `/reload`.
 
+### Statusbar
+
+By default the extension publishes `caveman: <mode>` to the pi footer. Hide it without changing mode:
+
+```
+/caveman status off    # hide footer entry (mode keeps running)
+/caveman status on     # show again
+```
+
+The `showStatus` flag is persisted alongside `mode`.
+
 ### Examples
 
 **"Why is my React component re-rendering?"**

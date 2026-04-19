@@ -23,6 +23,8 @@ export const VALID_MODES: readonly CavemanMode[] = [
 export interface CavemanConfig {
   mode: CavemanMode;
   enabled: boolean;
+  /** Publish mode to pi footer via ctx.ui.setStatus. Orthogonal to `mode`. */
+  showStatus: boolean;
 }
 
 export interface InjectionCache {
@@ -34,4 +36,5 @@ export interface InjectionCache {
 export const DEFAULT_CONFIG: CavemanConfig = {
   mode: "off",
   enabled: true,
+  showStatus: true,
 };
