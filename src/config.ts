@@ -74,7 +74,8 @@ export function loadConfig(): CavemanConfig {
   const obj = parsed as Record<string, unknown>;
   const mode = validateMode(obj.mode);
   const enabled = typeof obj.enabled === "boolean" ? obj.enabled : true;
-  return { mode, enabled };
+  const showStatus = typeof obj.showStatus === "boolean" ? obj.showStatus : true;
+  return { mode, enabled, showStatus };
 }
 
 export function saveConfig(config: CavemanConfig): void {
