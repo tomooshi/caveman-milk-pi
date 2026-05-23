@@ -3,7 +3,7 @@
 // Mode changes are the only legitimate cache-invalidation trigger
 // (ADR-015). Takes effect on the NEXT before_agent_start call.
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { CavemanConfig, CavemanMode, InjectionCache } from "./types.js";
 import { VALID_MODES } from "./types.js";
 import { validateMode, loadConfig } from "./config.js";

@@ -19,7 +19,7 @@
   "license": "MIT",
   "author": "tomooshi",
   "peerDependencies": {
-    "@mariozechner/pi-coding-agent": "*",
+    "@earendil-works/pi-coding-agent": "*",
     "@sinclair/typebox": "*"
   },
   "pi": {
@@ -41,7 +41,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@mariozechner/pi-coding-agent": "^0.67.4",
+    "@earendil-works/pi-coding-agent": "^0.75.5",
     "@types/node": "^25.6.0",
     "typescript": "^6.0.2",
     "vitest": "^4.1.4"

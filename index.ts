@@ -12,7 +12,7 @@
 //
 // Design rationale documented in maintainer's notes.
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { loadConfig, saveConfig } from "./src/config.js";
 import { loadSkillContent, computeInjection } from "./src/injection.js";
 import { registerCavemanCommand } from "./src/command.js";
