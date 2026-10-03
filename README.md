@@ -71,6 +71,31 @@ The `showStatus` flag is persisted alongside `mode`.
 
 Same answer. You pick how many words.
 
+### `ste` mode: clear prose, not fewer words
+
+`/caveman ste` is the one mode that does not compress. It asks for STE-lite: about 80% of
+[ASD-STE100](https://www.asd-ste100.org), the controlled language that aircraft maintenance
+manuals use. Andrej Karpathy suggested this register for reading model output
+([post, 2026-10-01](https://x.com/karpathy/status/2105819303471976479)): "80% of the way to
+ASD-STE100" because the full specification is strict.
+
+The aim is understanding, so the rules keep every article, subject and verb:
+
+- One topic in each sentence, and at most 25 words in a sentence.
+- Active voice. Only "can", "must" and "will" as helping verbs (no "should", "may", "might").
+- One name for one item. No semicolons or contractions.
+- Steps as a numbered list. A diagram for a flow of more than 3 steps.
+
+**"Why is my React component re-rendering?"**
+
+- `ste`: *"Your component makes a new object on each render. React compares the old object and the new
+  object by reference. The references are different, so React renders the component again. Wrap
+  the object in `useMemo`."*
+
+`ste` injects its own rules file, `skill/STE.md`, not the caveman SKILL, because the two rule sets
+conflict: caveman drops articles, and STE keeps them. The injection is cache-safe in the same way
+as the other modes (byte-identical per mode, three unit tests).
+
 ## Default is `off` (differs from upstream caveman)
 
 Upstream caveman auto-activates on install. caveman-milk-pi does not. We prefer explicit consent — the baseline pi experience is unchanged until you type `/caveman full`. Your mode persists after that, so it's a one-time decision.
@@ -134,6 +159,7 @@ Claims that are architecturally sound but not yet backed by measurement:
 | Claim | What's needed |
 |-------|---------------|
 | Cache hit-rate delta in tool-heavy long-form workloads | A/B verified for the 5-prompt mixed-content scenario. Workloads dominated by large tool outputs (heavy file reads, big bash returns) may show different cache dynamics and have not been measured. |
+| `ste` mode output quality | The rules file loads and injects deterministically (unit tests). Live behaviour on a long session is not yet scored. Upstream evidence on STE comprehension is mixed: it helps most on complex text. |
 | `wenyan-lite` and `wenyan-ultra` modes | `wenyan-full` was validated in v0.1.4. The other two classical Chinese variants are not yet verified. SKILL.md file-level integrity confirmed for all three, so the storage layer is fine; what remains is runtime behavior testing for the lite and ultra variants. |
 | Caveman persistence holds across 30+ turn sessions | Real long-session work with sample points at turn 5, 15, 30. Score caveman compliance against a 5-point rubric. |
 | Tool-call quality holds in `ultra` mode (more aggressive than `full`) | Same Write/Edit test as v0.2.0-01 but with `/caveman ultra` |
