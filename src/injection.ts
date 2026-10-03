@@ -21,13 +21,14 @@ const FRONTMATTER_REGEX = /^---[\s\S]*?---\s*/;
 const TABLE_ROW_REGEX = /^\|\s*\*\*(\S+?)\*\*\s*\|/;
 const EXAMPLE_LINE_REGEX = /^- (\S+?):\s/;
 
-function getSkillPath(): string {
+function getSkillPath(mode: CavemanMode): string {
   const here = path.dirname(fileURLToPath(import.meta.url));
-  return path.resolve(here, "..", "skill", "SKILL.md");
+  // "ste" has its own rules: caveman's SKILL drops articles, STE keeps every one.
+  return path.resolve(here, "..", "skill", mode === "ste" ? "STE.md" : "SKILL.md");
 }
 
-export function loadSkillContent(): string {
-  const skillPath = getSkillPath();
+export function loadSkillContent(mode: CavemanMode): string {
+  const skillPath = getSkillPath(mode);
   if (!fs.existsSync(skillPath)) {
     throw new Error(
       `caveman-milk-pi could not load SKILL.md at ${skillPath}. ` +
@@ -39,6 +40,12 @@ export function loadSkillContent(): string {
     throw new Error(
       `caveman-milk-pi SKILL.md at ${skillPath} is empty. Restore via scripts/sync-skill.sh.`,
     );
+  }
+  if (mode === "ste") {
+    if (!content.includes("## Rules")) {
+      throw new Error(`caveman-milk-pi STE.md at ${skillPath} is malformed (no "## Rules" section).`);
+    }
+    return content;
   }
   if (!content.includes("## Intensity")) {
     throw new Error(
@@ -82,9 +89,10 @@ export function computeInjection(
 
   const activeLabel = canonicalModeLabel(mode);
   const body = skillContent.replace(FRONTMATTER_REGEX, "");
-  const filtered = filterSkillBody(body, activeLabel);
+  // STE.md has no intensity table: it is injected whole.
+  const filtered = mode === "ste" ? body : filterSkillBody(body, activeLabel);
 
-  const header = `CAVEMAN MODE ACTIVE — level: ${activeLabel}\n\n`;
+  const header = mode === "ste" ? "STE-LITE MODE ACTIVE\n\n" : `CAVEMAN MODE ACTIVE — level: ${activeLabel}\n\n`;
   const text = "\n\n" + header + filtered;
   const sourceHash = crypto
     .createHash("sha256")

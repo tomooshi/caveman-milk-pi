@@ -4,6 +4,14 @@ All notable changes to caveman-milk-pi are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## Unreleased
+
+### Added
+
+- `ste` mode: STE-lite, about 80% of ASD-STE100. It injects its own rules file, `skill/STE.md`,
+  because caveman's SKILL drops articles and STE keeps every one. The aim is reader understanding,
+  not fewer tokens. Same cache-safe injection as the other modes (byte-identical per mode).
 ## [0.2.0] - 2026-04-16
 
 ### Changed (BREAKING)

@@ -11,7 +11,7 @@ import { VALID_MODES } from "../src/types.js";
 
 describe("loadSkillContent", () => {
   it("loads the vendored SKILL.md", () => {
-    const content = loadSkillContent();
+    const content = loadSkillContent("full");
     expect(content.length).toBeGreaterThan(1000);
     expect(content).toContain("## Intensity");
     expect(content).toContain("## Document Exemption");
@@ -19,7 +19,7 @@ describe("loadSkillContent", () => {
 });
 
 describe("computeInjection determinism (cache-safety invariant #1)", () => {
-  const content = loadSkillContent();
+  const content = loadSkillContent("full");
 
   for (const mode of VALID_MODES) {
     it(`mode=${mode}: same input produces same output`, () => {
@@ -41,7 +41,7 @@ describe("computeInjection determinism (cache-safety invariant #1)", () => {
 });
 
 describe("computeInjection mode filtering", () => {
-  const content = loadSkillContent();
+  const content = loadSkillContent("full");
 
   it("off mode produces empty text (zero-cost skip)", () => {
     const result = computeInjection("off", content);
@@ -106,5 +106,25 @@ describe("validateMode (fail-loud per ADR-012)", () => {
     expect(() => validateMode(42)).toThrow(/must be a string/);
     expect(() => validateMode(null)).toThrow(/must be a string/);
     expect(() => validateMode(undefined)).toThrow(/must be a string/);
+  });
+});
+
+describe("ste mode (STE-lite, its own rules file)", () => {
+  const ste = loadSkillContent("ste");
+
+  it("loads STE.md, not the caveman SKILL", () => {
+    expect(ste).toContain("## Rules");
+    expect(ste).not.toContain("## Intensity");
+  });
+
+  it("injects the STE rules and none of caveman's article-dropping rules", () => {
+    const result = computeInjection("ste", ste);
+    expect(result.text).toContain("STE-LITE MODE ACTIVE");
+    expect(result.text).toContain("Keep every article");
+    expect(result.text).not.toContain("Drop: articles");
+  });
+
+  it("is byte-identical across calls (cache-safety)", () => {
+    expect(computeInjection("ste", ste).text).toBe(computeInjection("ste", ste).text);
   });
 });

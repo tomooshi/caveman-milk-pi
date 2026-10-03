@@ -45,6 +45,7 @@ That's it. Your next chat turn will be terse. Run `/caveman off` to disable.
 /caveman wenyan-lite   # semi-classical Chinese terseness
 /caveman wenyan        # full 文言文 — classical literary Chinese
 /caveman wenyan-ultra  # extreme classical abbreviation
+/caveman ste           # STE-lite: clear full sentences (~80% ASD-STE100), not terseness
 ```
 
 Your mode persists to `~/.config/caveman-milk-pi.json` and survives pi restarts and `/reload`.

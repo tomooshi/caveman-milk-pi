@@ -8,7 +8,9 @@ export type CavemanMode =
   | "ultra"
   | "wenyan-lite"
   | "wenyan"
-  | "wenyan-ultra";
+  | "wenyan-ultra"
+  // STE-lite: clear full sentences (ASD-STE100, ~80%); its own rules file, not a caveman level.
+  | "ste";
 
 export const VALID_MODES: readonly CavemanMode[] = [
   "off",
@@ -18,6 +20,7 @@ export const VALID_MODES: readonly CavemanMode[] = [
   "wenyan-lite",
   "wenyan",
   "wenyan-ultra",
+  "ste",
 ] as const;
 
 export interface CavemanConfig {

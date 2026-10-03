@@ -89,7 +89,7 @@ export function registerCavemanCommand(pi: ExtensionAPI, deps: CommandDeps): voi
       const config: CavemanConfig = { ...loadConfig(), mode: newMode };
       deps.persist(config);
 
-      const skillContent = loadSkillContent();
+      const skillContent = loadSkillContent(newMode);
       const newCache = computeInjection(newMode, skillContent);
       deps.setCache(newCache);
 
