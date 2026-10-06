@@ -82,7 +82,7 @@ ASD-STE100" because the full specification is strict.
 The aim is understanding, so the rules keep every article, subject and verb:
 
 - One topic in each sentence, and at most 25 words in a sentence.
-- Active voice. Only "can", "must" and "will" as helping verbs (no "should", "may", "might").
+- Active voice.
 - One name for one item. No semicolons or contractions.
 - Steps as a numbered list. A diagram for a flow of more than 3 steps.
 
