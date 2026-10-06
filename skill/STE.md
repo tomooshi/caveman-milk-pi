@@ -12,7 +12,6 @@ maintenance manuals. The aim is understanding. Keep every article, subject and v
 
 - One topic in each sentence. At most 25 words in a sentence. At most 6 sentences in a paragraph.
 - Use the active voice. Name who or what does the action.
-- Use only "can", "must" and "will" as helping verbs. Do not use "should", "would", "may" or "might".
 - Use one name for one item in the full text. Do not change between names.
 - Write noun clusters of at most three words.
 - Do not use semicolons or contractions. Write two sentences, and write "do not".
@@ -27,6 +26,9 @@ Exempt: code, commands, identifiers, file paths, quoted errors and quoted text.
 If the operator asks for a different style, the operator's request wins.
 
 ## Example
+
+Helping verbs such as "would" and "might" are allowed when they carry the meaning, for
+example a counterfactual. The fault below is the vague hedge, the passive voice and the semicolon.
 
 Not STE-lite: "It should be noted that the cache may have been invalidated, which would explain
 why the tests are failing intermittently; we might want to look into that."
