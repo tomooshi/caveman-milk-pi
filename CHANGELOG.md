@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+### Changed
+
+- **Config file moved to pi's agent dir:** `<agent dir>/caveman-milk-pi.json` (honoring `PI_CODING_AGENT_DIR`, default `~/.pi/agent`) instead of `~/.config/caveman-milk-pi.json`, so the config follows the same installation as the extension. **Auto-migration shipped:** on first load after upgrade, if a legacy config (`~/.config/caveman-milk-pi.json` or the older `~/.config/pi-caveman.json`) exists and the agent-dir config does not, it is renamed (preserves your persisted mode with no manual action).
+
 ### Added
 
 - `ste` mode: STE-lite, about 80% of ASD-STE100. It injects its own rules file, `skill/STE.md`,

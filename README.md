@@ -48,7 +48,7 @@ That's it. Your next chat turn will be terse. Run `/caveman off` to disable.
 /caveman ste           # STE-lite: clear full sentences (~80% ASD-STE100), not terseness
 ```
 
-Your mode persists to `~/.config/caveman-milk-pi.json` and survives pi restarts and `/reload`.
+Your mode persists to `<agent dir>/caveman-milk-pi.json` (pi's agent dir — `PI_CODING_AGENT_DIR`, default `~/.pi/agent`) and survives pi restarts and `/reload`.
 
 ### Statusbar
 
@@ -235,11 +235,11 @@ The vendored file was corrupted. Restore via `bash scripts/sync-skill.sh`, revie
 
 **`caveman-milk-pi config: invalid mode 'X'`**
 
-The config file has an unknown mode. Delete `~/.config/caveman-milk-pi.json` to reset to defaults, or edit it to use one of the valid modes.
+The config file has an unknown mode. Delete `<agent dir>/caveman-milk-pi.json` to reset to defaults, or edit it to use one of the valid modes.
 
 **`caveman-milk-pi config ... is not a JSON object`**
 
-The config file is corrupted. Delete `~/.config/caveman-milk-pi.json` to reset.
+The config file is corrupted. Delete `<agent dir>/caveman-milk-pi.json` to reset.
 
 **Extension not activating on new session**
 
